@@ -1,9 +1,15 @@
-﻿<Application x:Class="AnalyticalGeometry.View.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:AnalyticalGeometry.View"
-             StartupUri="MainWindow.xaml">
+﻿<Application
+    x:Class="AnalyticalGeometry.View.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:pageVM="clr-namespace:AnalyticalGeometry.ViewModel.Pages;assembly=AnalyticalGeometry.ViewModel"
+    xmlns:pageView="clr-namespace:AnalyticalGeometry.View.Pages">
     <Application.Resources>
-         
+        <DataTemplate DataType="{x:Type pageVM:CircleAndPointVM}">
+            <pageView:CircleAndPoint />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type pageVM:TriangleAndPoint}">
+            <pageView:TriangleAndPoint />
+        </DataTemplate>
     </Application.Resources>
 </Application>

@@ -1,28 +1,15 @@
-﻿namespace AnalyticalGeometry.ViewModel.Pages;
+﻿using AnalyticalGeometry.Model;
+using AnalyticalGeometry.Model.Core;
+using AnalyticalGeometry.ViewModel.Core;
+
+namespace AnalyticalGeometry.ViewModel.Pages;
 
 public class CircleAndPointVM : BasePageViewModel
 {
-    private double convertedXCoordinateCircle;
-    public double ConvertedXCoordinateCircle 
-    {
-        get => convertedXCoordinateCircle;
-        set
-        {
-            convertedXCoordinateCircle = value;
-            OnPropertyChanged();
-        }
-    }
-
-    private double convertedYCoordinateCircle;
-    public double ConvertedYCoordinateCircle
-    {
-        get => convertedYCoordinateCircle;
-        set
-        {
-            convertedYCoordinateCircle = value;
-            OnPropertyChanged();
-        }
-    }
+    private const int diameterPoint = 5;
+    public static int DiameterPoint => diameterPoint;
+    public Coordinate2D ConvertedCoordinateCircle { get; set; } = new();
+    public Coordinate2D ConvertedCoordinatePoint { get; set; } = new();
 
     private double xCoordinateCircle;
     public double XCoordinateCircle
@@ -31,8 +18,7 @@ public class CircleAndPointVM : BasePageViewModel
         set
         {
             xCoordinateCircle = value;
-            ConvertedXCoordinateCircle = xCoordinateCircle - (diameter / 2);
-            OnPropertyChanged();
+            SetXCoordinateCircle();
         }
     }
 
@@ -43,19 +29,7 @@ public class CircleAndPointVM : BasePageViewModel
         set
         {
             yCoordinateCircle = value;
-            ConvertedYCoordinateCircle = yCoordinateCircle - diameter / 2;
-            OnPropertyChanged();
-        }
-    }
-
-    private double diameter;
-    public double Diameter
-    {
-        get => diameter;
-        set
-        {
-            diameter = value;
-            OnPropertyChanged();
+            SetYCoordinateCircle();
         }
     }
 
@@ -66,7 +40,8 @@ public class CircleAndPointVM : BasePageViewModel
         set
         {
             xCoordinatePoint = value;
-            OnPropertyChanged();
+
+            SetXCoordinatePoint();
         }
     }
 
@@ -77,7 +52,140 @@ public class CircleAndPointVM : BasePageViewModel
         set
         {
             yCoordinatePoint = value;
+
+            SetYCoordinatePoint();
+        }
+    }
+
+    private const int defaultDiameterCircle = 50;
+
+    private double diameterCircle = defaultDiameterCircle;
+    public double DiameterCircle
+    {
+        get => diameterCircle;
+        set
+        {
+            diameterCircle = value;
+
+            SetXCoordinateCircle();
+            SetYCoordinateCircle();
+
             OnPropertyChanged();
+        }
+    }
+
+    private double actualWidth;
+    public double ActualWidth 
+    {
+        get => actualWidth;
+        set
+        {
+            actualWidth = value;
+
+            SetXCoordinateCircle();
+            SetXCoordinatePoint();
+        }
+    }
+
+    private double actualHeight;
+    public double ActualHeight 
+    {
+        get => actualHeight;
+        set
+        {
+            actualHeight = value;
+
+            SetYCoordinateCircle();
+            SetYCoordinatePoint();
+        }
+    }
+
+    public bool isIncluded;
+    public bool IsIncluded
+    {
+        get => isIncluded;
+        set
+        {
+            isIncluded = value;
+
+            SerResponseMessage();
+        }
+    }
+
+    private string includedResponse = string.Empty;
+    public string IncludedResponse
+    {
+        get => includedResponse;
+        set
+        {
+            includedResponse = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public CircleAndPointVM()
+    {
+        XCoordinateCircle = 0;
+        YCoordinateCircle = 0;
+
+        XCoordinatePoint = 0;
+        YCoordinatePoint = 0;
+    }
+
+    private void SetXCoordinateCircle()
+    {
+        ConvertedCoordinateCircle.X = xCoordinateCircle - diameterCircle / 2 + actualWidth / 2;
+        IsIncluded = CheckIncluded();
+    }
+
+    private void SetYCoordinateCircle()
+    {
+        ConvertedCoordinateCircle.Y = yCoordinateCircle - diameterCircle / 2 + actualHeight / 2;
+        IsIncluded = CheckIncluded();
+    }
+
+    private void SetXCoordinatePoint()
+    {
+        ConvertedCoordinatePoint.X = xCoordinatePoint - diameterPoint / 2 + actualWidth / 2;
+        IsIncluded = CheckIncluded();
+    }
+
+    private void SetYCoordinatePoint()
+    {
+        ConvertedCoordinatePoint.Y = yCoordinatePoint - diameterPoint / 2 + actualHeight / 2;
+        IsIncluded = CheckIncluded();
+    }
+
+    private bool CheckIncluded()
+    {
+        var coordinatePointModel = new Point2D
+        {
+            X = xCoordinatePoint,
+            Y = yCoordinatePoint
+        };
+
+        var coordinateCircleModel = new Point2D
+        {
+            X = xCoordinateCircle,
+            Y = yCoordinateCircle
+        };
+
+        var radius = diameterCircle / 2;
+
+        var circleAndPointModel = new CircleAndPointModel(coordinateCircleModel, coordinatePointModel, radius);
+
+        return circleAndPointModel.IsIncluded();
+    }
+
+    private void SerResponseMessage()
+    {
+        if (isIncluded)
+        {
+            IncludedResponse = "Точка входит в окружность";
+        }
+        else
+        {
+            IncludedResponse = "Точка не входит в окружность";
         }
     }
 }

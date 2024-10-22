@@ -15,19 +15,19 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="175" />
         </Grid.ColumnDefinitions>
-        <Canvas>
+        <Canvas Name="gridCartesianCoordinateSystem" SizeChanged="Canvas_SizeChanged">
             <Ellipse
-                Canvas.Left="{Binding ConvertedXCoordinateCircle}"
-                Canvas.Top="{Binding ConvertedYCoordinateCircle}"
-                Width="{Binding Diameter}"
-                Height="{Binding Diameter}"
+                Canvas.Left="{Binding ConvertedCoordinateCircle.X}"
+                Canvas.Top="{Binding ConvertedCoordinateCircle.Y}"
+                Width="{Binding DiameterCircle}"
+                Height="{Binding DiameterCircle}"
                 Fill="Transparent"
                 Stroke="Black" />
             <Ellipse
-                Canvas.Left="{Binding XCoordinatePoint}"
-                Canvas.Top="{Binding YCoordinatePoint}"
-                Width="5"
-                Height="5"
+                Canvas.Left="{Binding ConvertedCoordinatePoint.X}"
+                Canvas.Top="{Binding ConvertedCoordinatePoint.Y}"
+                Width="{Binding DiameterPoint}"
+                Height="{Binding DiameterPoint}"
                 Fill="Black" />
             <Canvas.Background>
                 <DrawingBrush
@@ -69,7 +69,7 @@
                     <TextBox
                         Width="100"
                         HorizontalAlignment="Right"
-                        Text="{Binding Diameter, UpdateSourceTrigger=PropertyChanged}" />
+                        Text="{Binding DiameterCircle, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
             </StackPanel>
             <StackPanel Margin="10,20,10,0">
@@ -88,8 +88,11 @@
                         HorizontalAlignment="Right"
                         Text="{Binding YCoordinatePoint, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
+
+                <Grid Margin="0,10,0,0">
+                    <TextBlock Text="{Binding IncludedResponse}" />
+                </Grid>
             </StackPanel>
         </StackPanel>
-
     </Grid>
 </UserControl>
